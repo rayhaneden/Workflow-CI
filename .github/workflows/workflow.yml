@@ -1,0 +1,30 @@
+name: MLflow Project CI
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          environment-file: MLProject/conda.yaml
+          auto-activate-base: false
+          activate-environment: mlflow-env   
+
+      - name: Install MLflow
+        run: |
+          conda activate mlflow-env
+          pip install mlflow
+
+      - name: Run MLflow Project
+        run: |
+          conda activate mlflow-env
+          mlflow run MLProject -P n_estimators=150 -P max_depth=None -P min_samples_leaf=1 -P min_samples_split=2
