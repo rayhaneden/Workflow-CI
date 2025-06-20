@@ -8,6 +8,9 @@ on:
 jobs:
   train:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -17,14 +20,12 @@ jobs:
         with:
           environment-file: MLProject/conda.yaml
           auto-activate-base: false
-          activate-environment: mlflow-env   
+          activate-environment: mlflow-env
 
       - name: Install MLflow
         run: |
-          conda activate mlflow-env
           pip install mlflow
 
       - name: Run MLflow Project
         run: |
-          conda activate mlflow-env
           mlflow run MLProject -P n_estimators=150 -P max_depth=None -P min_samples_leaf=1 -P min_samples_split=2
